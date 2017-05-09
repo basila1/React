@@ -27,7 +27,35 @@ function SelectLanguage(props) {
   )
 }
 
+function RepoGrid (props) {
+  return (
+    <ul className = 'popular-list'>
+      {props.repos.map(function (repo, index) {
+        return (
+          <li key = {repo.name} className = 'popular-item'>
+            <div className = 'popular-rank'>#{index + 1}</div>
+            <ul className = 'space-list-items'>
+              <li>
+                <img
+                className = 'avatar'
+                src = {repo.owner.avatar_url}
+                alt = {'Avatar for ' + repo.owner.login}
+                />
+              </li>
+              <li>< a href = {repo.html_url}>{repo.name}</a></li>
+              <li>@{repo.owner.login}</li>
+              <li>{repo.stargazers_count} stars</li>
+            </ul>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
 
+RepoGrid.PropTypes = {
+  repos: PropTypes.array.isReqired,
+}
 SelectLanguage.PropTypes = {
   selectedLanguage: PropTypes.string.isReqired,
   onSelect: PropTypes.func.isReqired,
@@ -69,7 +97,7 @@ class Popular extends React.Component {
             repos: repos
           }
         })
-      }.bind(this)); //the this keywork inside of this function will  be the same as what it is outside which is in the .bind 
+      }.bind(this)); //the this keywork inside of this function will  be the same as what it is outside which is in the .bind
   }
   //component needs a UI to it, so we are going to specify a render() method
   render() {
@@ -80,6 +108,9 @@ class Popular extends React.Component {
           selectedLanguage = {this.state.selectedLanguage}
           onSelect = {this.updateLanguage}
         />
+        {!this.state.repos
+          ? <p>LOADING</p>
+          : <RepoGrid repos = {this.state.repos} />}
       </div>
     )
   }
